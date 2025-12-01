@@ -1,0 +1,119 @@
+-- Seed Test Users for HRMS System
+-- Password for all users: Test@123
+-- Hashed using bcrypt with salt rounds 10
+
+-- Create a demo tenant (ID: 00000001)
+INSERT INTO tenants (id, name, domain, is_active) VALUES
+('00000001-0000-0000-0000-000000000000', 'Demo Company', 'demo.example.com', true)
+ON CONFLICT (id) DO NOTHING;
+
+-- Create demo subscription plan (ID: 00000002)
+INSERT INTO subscription_plans (id, name, description, price_per_month, price_per_employee, max_employees, is_trial, trial_duration_days) VALUES
+('00000002-0000-0000-0000-000000000000', 'Trial Plan', 'Free trial plan', 0, 0, 50, true, 14)
+ON CONFLICT (id) DO NOTHING;
+
+-- Assign plan to tenant
+INSERT INTO tenant_subscription (tenant_id, plan_id, status, trial_end_date) VALUES
+('00000001-0000-0000-0000-000000000000', '00000002-0000-0000-0000-000000000000', 'TRIAL', CURRENT_DATE + INTERVAL '14 days')
+ON CONFLICT DO NOTHING;
+
+-- Create departments (IDs: 00000101, 00000102, 00000103)
+INSERT INTO departments (id, tenant_id, name, code) VALUES
+('00000101-0000-0000-0000-000000000000', '00000001-0000-0000-0000-000000000000', 'Engineering', 'ENG'),
+('00000102-0000-0000-0000-000000000000', '00000001-0000-0000-0000-000000000000', 'Human Resources', 'HR'),
+('00000103-0000-0000-0000-000000000000', '00000001-0000-0000-0000-000000000000', 'Sales', 'SALES')
+ON CONFLICT (id) DO NOTHING;
+
+-- Create designations (IDs: 00000201...00000205)
+INSERT INTO designations (id, tenant_id, name, level) VALUES
+('00000201-0000-0000-0000-000000000000', '00000001-0000-0000-0000-000000000000', 'CEO', 1),
+('00000202-0000-0000-0000-000000000000', '00000001-0000-0000-0000-000000000000', 'HR Manager', 2),
+('00000203-0000-0000-0000-000000000000', '00000001-0000-0000-0000-000000000000', 'Engineering Manager', 2),
+('00000204-0000-0000-0000-000000000000', '00000001-0000-0000-0000-000000000000', 'Software Engineer', 3),
+('00000205-0000-0000-0000-000000000000', '00000001-0000-0000-0000-000000000000', 'Junior Developer', 4)
+ON CONFLICT (id) DO NOTHING;
+
+-- Create test users (IDs: 00000301...00000306)
+-- Password for all: Test@123 (bcrypt hash)
+INSERT INTO users (id, tenant_id, email, password_hash, role, is_active, employee_id) VALUES
+-- SUPER_ADMIN (no tenant, no employee)
+('00000301-0000-0000-0000-000000000000', NULL, 'superadmin@hrms.com', '$2b$10$K4DztN3t6Fkg3UFlgxKq4e.1GXAqnuIARIkj3ZAoVAPy54eVCcDoe', 'SUPER_ADMIN', true, NULL),
+-- ADMIN
+('00000302-0000-0000-0000-000000000000', '00000001-0000-0000-0000-000000000000', 'admin@demo.com', '$2b$10$K4DztN3t6Fkg3UFlgxKq4e.1GXAqnuIARIkj3ZAoVAPy54eVCcDoe', 'ADMIN', true, '00000401-0000-0000-0000-000000000000'),
+-- HR
+('00000303-0000-0000-0000-000000000000', '00000001-0000-0000-0000-000000000000', 'hr@demo.com', '$2b$10$K4DztN3t6Fkg3UFlgxKq4e.1GXAqnuIARIkj3ZAoVAPy54eVCcDoe', 'HR', true, '00000402-0000-0000-0000-000000000000'),
+-- MANAGER
+('00000304-0000-0000-0000-000000000000', '00000001-0000-0000-0000-000000000000', 'manager@demo.com', '$2b$10$K4DztN3t6Fkg3UFlgxKq4e.1GXAqnuIARIkj3ZAoVAPy54eVCcDoe', 'MANAGER', true, '00000403-0000-0000-0000-000000000000'),
+-- EMPLOYEE 1
+('00000305-0000-0000-0000-000000000000', '00000001-0000-0000-0000-000000000000', 'employee1@demo.com', '$2b$10$K4DztN3t6Fkg3UFlgxKq4e.1GXAqnuIARIkj3ZAoVAPy54eVCcDoe', 'EMPLOYEE', true, '00000404-0000-0000-0000-000000000000'),
+-- EMPLOYEE 2
+('00000306-0000-0000-0000-000000000000', '00000001-0000-0000-0000-000000000000', 'employee2@demo.com', '$2b$10$K4DztN3t6Fkg3UFlgxKq4e.1GXAqnuIARIkj3ZAoVAPy54eVCcDoe', 'EMPLOYEE', true, '00000405-0000-0000-0000-000000000000')
+ON CONFLICT (email) DO UPDATE SET 
+  password_hash = EXCLUDED.password_hash,
+  is_active = EXCLUDED.is_active;
+
+-- Create corresponding employee records (IDs: 00000401...00000405)
+INSERT INTO employees (id, tenant_id, user_id, employee_code, first_name, last_name, email, personal_email, phone, gender, date_of_birth, marital_status, status, department_id, designation_id, reports_to, date_of_joining) VALUES
+-- Admin Employee
+('00000401-0000-0000-0000-000000000000', '00000001-0000-0000-0000-000000000000', '00000302-0000-0000-0000-000000000000', 'EMP001', 'John', 'Admin', 'admin@demo.com', 'john.admin@personal.com', '+1234567890', 'MALE', '1985-01-15', 'MARRIED', 'ACTIVE', '00000101-0000-0000-0000-000000000000', '00000201-0000-0000-0000-000000000000', NULL, '2020-01-01'),
+-- HR Employee
+('00000402-0000-0000-0000-000000000000', '00000001-0000-0000-0000-000000000000', '00000303-0000-0000-0000-000000000000', 'EMP002', 'Sarah', 'HR', 'hr@demo.com', 'sarah.hr@personal.com', '+1234567891', 'FEMALE', '1988-05-20', 'SINGLE', 'ACTIVE', '00000102-0000-0000-0000-000000000000', '00000202-0000-0000-0000-000000000000', '00000401-0000-0000-0000-000000000000', '2020-02-15'),
+-- Manager Employee
+('00000403-0000-0000-0000-000000000000', '00000001-0000-0000-0000-000000000000', '00000304-0000-0000-0000-000000000000', 'EMP003', 'Mike', 'Manager', 'manager@demo.com', 'mike.manager@personal.com', '+1234567892', 'MALE', '1987-09-10', 'MARRIED', 'ACTIVE', '00000101-0000-0000-0000-000000000000', '00000203-0000-0000-0000-000000000000', '00000401-0000-0000-0000-000000000000', '2020-03-01'),
+-- Employee 1
+('00000404-0000-0000-0000-000000000000', '00000001-0000-0000-0000-000000000000', '00000305-0000-0000-0000-000000000000', 'EMP004', 'Alice', 'Developer', 'employee1@demo.com', 'alice.dev@personal.com', '+1234567893', 'FEMALE', '1995-03-25', 'SINGLE', 'ACTIVE', '00000101-0000-0000-0000-000000000000', '00000204-0000-0000-0000-000000000000', '00000403-0000-0000-0000-000000000000', '2021-06-01'),
+-- Employee 2
+('00000405-0000-0000-0000-000000000000', '00000001-0000-0000-0000-000000000000', '00000306-0000-0000-0000-000000000000', 'EMP005', 'Bob', 'Junior', 'employee2@demo.com', 'bob.junior@personal.com', '+1234567894', 'MALE', '1998-11-30', 'SINGLE', 'ACTIVE', '00000101-0000-0000-0000-000000000000', '00000205-0000-0000-0000-000000000000', '00000403-0000-0000-0000-000000000000', '2022-01-15')
+ON CONFLICT (id) DO UPDATE SET
+  user_id = EXCLUDED.user_id,
+  first_name = EXCLUDED.first_name,
+  last_name = EXCLUDED.last_name,
+  email = EXCLUDED.email,
+  status = EXCLUDED.status;
+
+-- Display login credentials
+DO $$
+BEGIN
+  RAISE NOTICE '';
+  RAISE NOTICE '';
+  RAISE NOTICE 'Password for ALL users: Test@123';
+  RAISE NOTICE '';
+  RAISE NOTICE 'SUPER_ADMIN:';
+  RAISE NOTICE '  Email: sirsn11@gmail.com';
+  RAISE NOTICE '  Role: SUPER_ADMIN';
+  RAISE NOTICE '  Note: No tenant association, full system access';
+  RAISE NOTICE '';
+  RAISE NOTICE 'ADMIN:';
+  RAISE NOTICE '  Email: admin@demo.com';
+  RAISE NOTICE '  Role: ADMIN';
+  RAISE NOTICE '  Name: John Admin';
+  RAISE NOTICE '  Employee Code: EMP001';
+  RAISE NOTICE '';
+  RAISE NOTICE 'HR:';
+  RAISE NOTICE '  Email: hr@demo.com';
+  RAISE NOTICE '  Role: HR';
+  RAISE NOTICE '  Name: Sarah HR';
+  RAISE NOTICE '  Employee Code: EMP002';
+  RAISE NOTICE '';
+  RAISE NOTICE 'MANAGER:';
+  RAISE NOTICE '  Email: manager@demo.com';
+  RAISE NOTICE '  Role: MANAGER';
+  RAISE NOTICE '  Name: Mike Manager';
+  RAISE NOTICE '  Employee Code: EMP003';
+  RAISE NOTICE '  Team: Alice Developer, Bob Junior';
+  RAISE NOTICE '';
+  RAISE NOTICE 'EMPLOYEE 1:';
+  RAISE NOTICE '  Email: employee1@demo.com';
+  RAISE NOTICE '  Role: EMPLOYEE';
+  RAISE NOTICE '  Name: Alice Developer';
+  RAISE NOTICE '  Employee Code: EMP004';
+  RAISE NOTICE '  Reports to: Mike Manager';
+  RAISE NOTICE '';
+  RAISE NOTICE 'EMPLOYEE 2:';
+  RAISE NOTICE '  Email: employee2@demo.com';
+  RAISE NOTICE '  Role: EMPLOYEE';
+  RAISE NOTICE '  Name: Bob Junior';
+  RAISE NOTICE '  Employee Code: EMP005';
+  RAISE NOTICE '  Reports to: Mike Manager';
+  RAISE NOTICE '';
+END $$;
