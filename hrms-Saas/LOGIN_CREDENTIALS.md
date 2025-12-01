@@ -124,7 +124,7 @@ Demo Company
 
 2. Or manually seed the users:
    ```bash
-   psql -U hrms_user -d hrms_saas_db -f src/database/seed/seed_users.sql
+   psql -U hrms_user -d hrms_saas_db_db -f src/database/seed/seed_users.sql
    ```
 
 3. Start the server:

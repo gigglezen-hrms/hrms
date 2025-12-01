@@ -93,7 +93,7 @@ async function setupDatabase() {
   const DB_HOST = process.env.DB_HOST || 'localhost';
   const DB_PORT = process.env.DB_PORT || 5432;
   const DB_USER = process.env.DB_USER || 'hrms_user';
-  const DB_NAME = process.env.DB_NAME || 'hrms_saas_db_db';
+  const DB_NAME = process.env.DB_NAME || 'hrms_saas_db';
   const DB_PASSWORD = process.env.DB_PASSWORD;
 
   if (DB_PASSWORD) {

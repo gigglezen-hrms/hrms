@@ -2,6 +2,19 @@
 -- Password for all users: Test@123
 -- Hashed using bcrypt with salt rounds 10
 
+BEGIN;
+
+-- Temporarily disable RLS for seeding (will be re-enabled by schema)
+ALTER TABLE tenants DISABLE ROW LEVEL SECURITY;
+ALTER TABLE subscription_plans DISABLE ROW LEVEL SECURITY;
+ALTER TABLE tenant_subscription DISABLE ROW LEVEL SECURITY;
+ALTER TABLE users DISABLE ROW LEVEL SECURITY;
+ALTER TABLE employees DISABLE ROW LEVEL SECURITY;
+ALTER TABLE departments DISABLE ROW LEVEL SECURITY;
+ALTER TABLE designations DISABLE ROW LEVEL SECURITY;
+ALTER TABLE shifts DISABLE ROW LEVEL SECURITY;
+ALTER TABLE shift_assignments DISABLE ROW LEVEL SECURITY;
+
 -- Create a demo tenant (ID: 00000001)
 INSERT INTO tenants (id, name, domain, is_active) VALUES
 ('00000001-0000-0000-0000-000000000000', 'Demo Company', 'demo.example.com', true)
@@ -117,3 +130,16 @@ BEGIN
   RAISE NOTICE '  Reports to: Mike Manager';
   RAISE NOTICE '';
 END $$;
+
+-- Re-enable RLS for all tables
+ALTER TABLE tenants ENABLE ROW LEVEL SECURITY;
+ALTER TABLE subscription_plans ENABLE ROW LEVEL SECURITY;
+ALTER TABLE tenant_subscription ENABLE ROW LEVEL SECURITY;
+ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE employees ENABLE ROW LEVEL SECURITY;
+ALTER TABLE departments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE designations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE shifts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE shift_assignments ENABLE ROW LEVEL SECURITY;
+
+COMMIT;

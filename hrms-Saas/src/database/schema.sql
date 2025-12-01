@@ -644,12 +644,20 @@ USING (
 ALTER TABLE departments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE departments FORCE ROW LEVEL SECURITY;
 
+CREATE POLICY departments_super_admin_policy
+ON departments
+USING (has_role('SUPER_ADMIN'));
+
 CREATE POLICY departments_tenant_policy
 ON departments
 USING (tenant_id = app_tenant_id());
 
 ALTER TABLE designations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE designations FORCE ROW LEVEL SECURITY;
+
+CREATE POLICY designations_super_admin_policy
+ON designations
+USING (has_role('SUPER_ADMIN'));
 
 CREATE POLICY designations_tenant_policy
 ON designations
@@ -659,12 +667,20 @@ USING (tenant_id = app_tenant_id());
 ALTER TABLE shifts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE shifts FORCE ROW LEVEL SECURITY;
 
+CREATE POLICY shifts_super_admin_policy
+ON shifts
+USING (has_role('SUPER_ADMIN'));
+
 CREATE POLICY shifts_tenant_policy
 ON shifts
 USING (tenant_id = app_tenant_id());
 
 ALTER TABLE shift_assignments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE shift_assignments FORCE ROW LEVEL SECURITY;
+
+CREATE POLICY shift_assignments_super_admin_policy
+ON shift_assignments
+USING (has_role('SUPER_ADMIN'));
 
 CREATE POLICY shift_assignments_tenant_policy
 ON shift_assignments
