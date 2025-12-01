@@ -605,6 +605,12 @@ WITH CHECK (
   )
 );
 
+-- Login policy - allows reading user record by email for authentication (no context required)
+CREATE POLICY users_login_policy
+ON users
+FOR SELECT
+USING (true);
+
 -- Employees
 ALTER TABLE employees ENABLE ROW LEVEL SECURITY;
 ALTER TABLE employees FORCE ROW LEVEL SECURITY;
@@ -923,6 +929,12 @@ USING (
   tenant_id = app_tenant_id()
   AND user_id = app_user_id()
 );
+
+-- Allow INSERT for session creation during login (no context required for INSERT)
+CREATE POLICY sessions_login_policy
+ON user_sessions
+FOR INSERT
+WITH CHECK (true);
 
 ALTER TABLE user_tokens ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_tokens FORCE ROW LEVEL SECURITY;
