@@ -62,8 +62,8 @@ export const ForgotPasswordPage = () => {
               {forgotPasswordMutation.isSuccess ? (
                 <>
                   <Box mb={4} color="green.200">If an account with that email exists, a reset link has been sent.</Box>
-                  <Text fontSize="sm" color={mutedText} mb={4}>For demo/testing you can simulate the reset link by clicking the button below (it will open the Reset Password page with a mock token).</Text>
-                  <Button w="full" onClick={() => navigate('/reset-password?token=demo-token')} bg={accentGold} color="black">Open reset page (simulate link)</Button>
+                  {/* <Text fontSize="sm" color={mutedText} mb={4}>For demo/testing you can simulate the reset link by clicking the button below (it will open the Reset Password page with a mock token).</Text>
+                  <Button w="full" onClick={() => navigate('/reset-password?token=demo-token')} bg={accentGold} color="black">Open reset page (simulate link)</Button> */}
                 </>
               ) : (
                 <form onSubmit={handleSubmit(onSubmit)}>
