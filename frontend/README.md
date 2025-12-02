@@ -88,21 +88,6 @@ The application will open at `http://localhost:5173`
 npm run build
 ```
 
-## Demo Credentials
-
-```
-Email: admin@techinnovations.com
-Password: password
-```
-
-You can also try these credentials for different roles:
-- `tenant.admin@techinnovations.com` - Tenant Admin
-- `hr@techinnovations.com` - HR
-- `manager@techinnovations.com` - Manager
-- `emp1@techinnovations.com` - Employee
-
-All use password: `password`
-
 ## Project Structure
 
 ```
