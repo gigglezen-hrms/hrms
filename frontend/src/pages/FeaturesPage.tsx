@@ -62,7 +62,6 @@ const features = [
 
 const FeaturesSection = () => {
   const { colorMode } = useColorMode();
-
   const cardBg = "rgba(15,15,20,0.9)";
   const borders = "rgba(245,196,81,0.35)";
   const accent = "#F5C451";

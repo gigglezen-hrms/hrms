@@ -18,17 +18,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import FeaturesSection from "./FeaturesPage";
-import {
-  FiClock,
-  FiUsers,
-  FiCheckCircle,
-  FiCreditCard,
-  FiBarChart2,
-  FiShield,
-  FiCpu,
-  FiFolder,
-  FiHeadphones,
-} from "react-icons/fi";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import PricingPage from "./PricingPage";
 
@@ -36,9 +25,9 @@ const MotionBox = motion(Box);
 const MotionStack = motion(Stack);
 const MotionHStack = motion(HStack);
 const MotionButton = motion(Button);
-const MotionIcon = motion(Icon);
-const MotionSpan = motion("span");
-const MotionText = motion(Text);
+// const MotionIcon = motion(Icon);
+// const MotionSpan = motion("span");
+// const MotionText = motion(Text);
 const workflow = [
   {
     step: "01",
@@ -135,6 +124,8 @@ export const LandingPage = () => {
                 bgGradient="linear(to-r, #FFFFFF, #F5C451)"
                 bgClip="text"
                 letterSpacing="widest"
+                lineHeight="1.3" // <— Fixes clipped “g”
+                display="inline-block"
               >
                 GiggleZen
               </Heading>
@@ -277,27 +268,26 @@ export const LandingPage = () => {
               maxW={{ base: "full", md: "lg" }}
             >
               <Badge
-  px={3}
-  py={1}
-  borderRadius="full"
-  bg="whiteAlpha.100"
-  border="1px solid"
-  borderColor="whiteAlpha.200"
-  fontSize="xs"
-  fontWeight="medium"
-  textTransform="uppercase"
-  letterSpacing="widest"
-  color="whiteAlpha.700"            // half-white normal
-  transition="all 0.2s ease"        // smooth hover
-  _hover={{
-    color: "white",                 // full bright white
-    boxShadow: "0 0 10px rgba(244,197,66,0.6)", // golden glow
-    borderColor: "rgba(244,197,66,0.6)",
-  }}
->
-  HR MANAGEMENT · ATTENDANCE · PAYROLL
-</Badge>
-
+                px={3}
+                py={1}
+                borderRadius="full"
+                bg="whiteAlpha.100"
+                border="1px solid"
+                borderColor="whiteAlpha.200"
+                fontSize="xs"
+                fontWeight="medium"
+                textTransform="uppercase"
+                letterSpacing="widest"
+                color="whiteAlpha.700" // half-white normal
+                transition="all 0.2s ease" // smooth hover
+                _hover={{
+                  color: "white", // full bright white
+                  boxShadow: "0 0 10px rgba(244,197,66,0.6)", // golden glow
+                  borderColor: "rgba(244,197,66,0.6)",
+                }}
+              >
+                HR MANAGEMENT · ATTENDANCE · PAYROLL
+              </Badge>
 
               <Heading
                 as="h1"
@@ -404,6 +394,7 @@ export const LandingPage = () => {
                       px={3}
                       py={1}
                       fontSize="xs"
+                      color={"whiteAlpha.700"}
                     >
                       Live HR Snapshot
                     </Badge>
