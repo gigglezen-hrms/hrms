@@ -11,11 +11,8 @@ module.exports = function requestLogger(req, res, next) {
             ? req.body
             : {};
 
-    if (Object.keys(safeBody).length > 0) {
-        console.log(
-            '   Body:',
-            JSON.stringify(safeBody, null, 2).substring(0, 200)
-        );
+    if (req.body && typeof req.body === 'object' && Object.keys(req.body).length > 0) {
+        console.log('   Body:', JSON.stringify(req.body, null, 2).substring(0, 200));
     }
 
     res.on('finish', () => {

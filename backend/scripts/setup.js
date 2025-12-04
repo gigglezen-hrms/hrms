@@ -168,6 +168,24 @@ async function setupDatabase() {
   } else {
     console.log("No user seed file found");
   }
+  // -----------------------
+  // Step E: Seed Test Subscriptions
+  // -----------------------
+  console.log('Seeding test subscriptions...');
+  const subscriptionSeedPath = 'src/database/seed/seed_subscription_plans.sql';
+
+  if (fs.existsSync(subscriptionSeedPath)) {
+    const seedCmd =
+      `psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_NAME} -f ${subscriptionSeedPath}`;
+
+    if (!run(seedCmd)) {
+      console.error(' Seeding subscriptions failed');
+      process.exit(1);
+    }
+    console.log('✓ Test subscriptions seeded');
+  } else {
+    console.log('No subscription seed file found');
+  }
 
   console.log("");
 }
