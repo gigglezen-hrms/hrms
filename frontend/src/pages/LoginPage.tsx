@@ -99,7 +99,9 @@ export const LoginPage = () => {
                 <Text fontWeight="bold" fontSize="sm" color="black">GZ</Text>
               </Box>
 
-              <Heading size="xl" bgGradient="linear(to-r, #FFFFFF, #F5C451)" bgClip="text" letterSpacing="wide">GiggleZen</Heading>
+              <Heading size="xl" bgGradient="linear(to-r, #FFFFFF, #F5C451)" bgClip="text"letterSpacing="wide" lineHeight="1.3" py="1"> GiggleZen
+              </Heading>
+
               <Text fontSize="sm" color={mutedText}>Sign in to your workspace</Text>
             </MotionStack>
 

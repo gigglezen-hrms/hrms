@@ -165,10 +165,7 @@ export const RegisterTenantPage = () => {
                 </Box>
 
                 <Heading
-                  size="lg"
-                  bgGradient="linear(to-r, #FFFFFF, #F5C451)"
-                  bgClip="text"
-                  letterSpacing="wide"
+                  size="xl" bgGradient="linear(to-r, #FFFFFF, #F5C451)" bgClip="text"letterSpacing="wide" lineHeight="1.3" py="1"
                 >
                   Create Organization
                 </Heading>

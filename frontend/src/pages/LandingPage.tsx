@@ -14,92 +14,56 @@ import {
   Divider,
   Avatar,
   Badge,
-} from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import {
-  FiClock,
-  FiUsers,
-  FiCheckCircle,
-  FiCreditCard,
-  FiBarChart2,
-  FiShield,
-} from 'react-icons/fi';
-import { ArrowForwardIcon } from '@chakra-ui/icons';
+} from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import FeaturesSection from "./FeaturesPage";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
+import PricingPage from "./PricingPage";
 
 const MotionBox = motion(Box);
 const MotionStack = motion(Stack);
 const MotionHStack = motion(HStack);
-
-const features = [
-  {
-    icon: FiUsers,
-    title: 'Employee Management',
-    desc: 'Single source of truth for profiles, roles, documents, and lifecycle.',
-  },
-  {
-    icon: FiClock,
-    title: 'Attendance & Shifts',
-    desc: 'Track check-in/out, shifts, and hybrid work with smart rules.',
-  },
-  {
-    icon: FiCheckCircle,
-    title: 'Leave Management',
-    desc: 'Configurable policies, approval flows, and real-time balances.',
-  },
-  {
-    icon: FiCreditCard,
-    title: 'Payroll & Payouts',
-    desc: 'Automated salary runs, payslips, and compliance-ready exports.',
-  },
-  {
-    icon: FiBarChart2,
-    title: 'HR Analytics',
-    desc: 'Live dashboards for headcount, attrition, and payroll insights.',
-  },
-  {
-    icon: FiShield,
-    title: 'Secure & Auditable',
-    desc: 'Role-based access, audit trails, and enterprise-grade security.',
-  },
-];
-
+const MotionButton = motion(Button);
+// const MotionIcon = motion(Icon);
+// const MotionSpan = motion("span");
+// const MotionText = motion(Text);
 const workflow = [
   {
-    step: '01',
-    title: 'Onboard your team',
-    body: 'Import employees in bulk or add them in seconds. Set locations, departments, and managers.',
+    step: "01",
+    title: "Onboard your team",
+    body: "Import employees in bulk or add them in seconds. Set locations, departments, and managers.",
   },
   {
-    step: '02',
-    title: 'Automate HR operations',
-    body: 'Let workflows handle attendance, leave, and approvals with minimal manual intervention.',
+    step: "02",
+    title: "Automate HR operations",
+    body: "Let workflows handle attendance, leave, and approvals with minimal manual intervention.",
   },
   {
-    step: '03',
-    title: 'Run payroll in hours',
-    body: 'Pull attendance, compute payouts, and generate payslips with a single flow.',
+    step: "03",
+    title: "Run payroll in hours",
+    body: "Pull attendance, compute payouts, and generate payslips with a single flow.",
   },
 ];
 
 const stats = [
-  { label: 'Reduction in HR Ops time', value: '40%' },
-  { label: 'Faster payroll processing', value: '3x' },
-  { label: 'Less manual errors', value: '60%' },
+  { label: "Reduction in HR Ops time", value: "40%" },
+  { label: "Faster payroll processing", value: "3x" },
+  { label: "Less manual errors", value: "60%" },
 ];
 
 const testimonials = [
   {
-    name: 'Ananya Sharma',
-    role: 'Head of People, Fintech Co.',
+    name: "Ananya Sharma",
+    role: "Head of People, Fintech Co.",
     quote:
-      'HRMS Pro helped us centralize attendance, leave, and payroll. Our HR team finally has time for people, not paperwork.',
+      "HRMS Pro helped us centralize attendance, leave, and payroll. Our HR team finally has time for people, not paperwork.",
   },
   {
-    name: 'Rahul Verma',
-    role: 'HR Manager, SaaS Startup',
+    name: "Rahul Verma",
+    role: "HR Manager, SaaS Startup",
     quote:
-      'The dashboard gives me real-time visibility into headcount, leaves, and payroll. No more juggling spreadsheets.',
+      "The dashboard gives me real-time visibility into headcount, leaves, and payroll. No more juggling spreadsheets.",
   },
 ];
 
@@ -109,11 +73,12 @@ export const LandingPage = () => {
 
   const isMobile = useBreakpointValue({ base: true, md: false });
 
-  const bg = '#050509';
-  const cardBg = colorMode === 'light' ? 'rgba(15,15,20,0.9)' : 'rgba(15,15,20,0.9)';
-  const borderGold = 'rgba(245,196,81,0.4)';
-  const accentGold = '#F5C451';
-  const mutedText = 'gray.400';
+  const bg = "#050509";
+  const cardBg =
+    colorMode === "light" ? "rgba(15,15,20,0.9)" : "rgba(15,15,20,0.9)";
+  const borderGold = "rgba(245,196,81,0.4)";
+  const accentGold = "#F5C451";
+  const mutedText = "gray.400";
 
   return (
     <Box bg={bg} color="white" minH="100vh">
@@ -159,58 +124,113 @@ export const LandingPage = () => {
                 bgGradient="linear(to-r, #FFFFFF, #F5C451)"
                 bgClip="text"
                 letterSpacing="widest"
+                lineHeight="1.3" // <— Fixes clipped “g”
+                display="inline-block"
               >
                 GiggleZen
               </Heading>
             </HStack>
-
-            <HStack gap={4} display={{ base: 'none', md: 'flex' }}>
-              <Button
+            <MotionHStack
+              gap={4}
+              display={{ base: "none", md: "flex" }}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, staggerChildren: 0.15 }}
+            >
+              {/* Features */}
+              <MotionButton
                 variant="ghost"
                 size="sm"
-                _hover={{ bg: 'whiteAlpha.100' }}
+                color="whiteAlpha.700" // half white
+                whileHover={{
+                  scale: 1.1,
+                  y: -3,
+                  boxShadow: "0 0 12px 4px rgba(255, 215, 0, 0.8)", // golden glow
+                }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 200 }}
+                _hover={{
+                  bg: "whiteAlpha.100",
+                  color: "white", // bright white on hover
+                  boxShadow: "0 0 12px 4px rgba(255, 215, 0, 0.8)", // glow fallback
+                }}
                 onClick={() => {
-                  const el = document.getElementById('features');
-                  el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  const el = document.getElementById("features");
+                  el?.scrollIntoView({ behavior: "smooth", block: "start" });
                 }}
               >
                 Features
-              </Button>
-              <Button
+              </MotionButton>
+
+              {/* Pricing */}
+              <MotionButton
                 variant="ghost"
                 size="sm"
-                _hover={{ bg: 'whiteAlpha.100' }}
-                onClick={() => navigate('/pricing')}
+                color="whiteAlpha.700" // half white
+                whileHover={{
+                  scale: 1.1,
+                  y: -3,
+                  boxShadow: "0 0 12px 4px rgba(255, 215, 0, 0.8)", // golden glow
+                }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 200 }}
+                _hover={{
+                  bg: "whiteAlpha.100",
+                  color: "white",
+                  boxShadow: "0 0 12px 4px rgba(255, 215, 0, 0.8)",
+                }}
+                onClick={() => navigate("/pricing")}
               >
                 Pricing
-              </Button>
-              <Button
+              </MotionButton>
+
+              {/* Register */}
+              <MotionButton
                 variant="outline"
                 size="sm"
                 borderColor={accentGold}
-                _hover={{ bg: 'whiteAlpha.100' }}
-                onClick={() => navigate('/register')}
+                color="whiteAlpha.700" // half white when normal
+                whileHover={{
+                  scale: 1.1,
+                  y: -3,
+                  boxShadow: "0px 0px 10px rgba(244,197,66,0.4)", // golden glow
+                }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 200 }}
+                _hover={{
+                  bg: "whiteAlpha.100",
+                  color: "white", // full bright white on hover
+                }}
+                onClick={() => navigate("/register")}
               >
                 Register
-              </Button>
-              <Button
+              </MotionButton>
+
+              {/* Login */}
+              <MotionButton
                 size="sm"
                 bg={accentGold}
                 color="black"
-                _hover={{ bg: '#e5b842' }}
-                onClick={() => navigate('/login')}
+                whileHover={{
+                  scale: 1.12,
+                  y: -3,
+                  boxShadow: "0px 0px 12px rgba(244,197,66,0.6)",
+                }}
+                whileTap={{ scale: 0.96 }}
+                transition={{ type: "spring", stiffness: 200 }}
+                _hover={{ bg: "#e5b842" }}
+                onClick={() => navigate("/login")}
               >
                 Login
-              </Button>
-            </HStack>
-
+              </MotionButton>
+            </MotionHStack>
             {/* Mobile right slot */}
-            <HStack gap={2} display={{ base: 'flex', md: 'none' }}>
+            <HStack gap={2} display={{ base: "flex", md: "none" }}>
               <Button
                 size="xs"
                 variant="outline"
                 borderColor={accentGold}
-                onClick={() => navigate('/register')}
+                onClick={() => navigate("/register")}
               >
                 Register
               </Button>
@@ -218,8 +238,8 @@ export const LandingPage = () => {
                 size="xs"
                 bg={accentGold}
                 color="black"
-                _hover={{ bg: '#e5b842' }}
-                onClick={() => navigate('/login')}
+                _hover={{ bg: "#e5b842" }}
+                onClick={() => navigate("/login")}
               >
                 Login
               </Button>
@@ -233,7 +253,7 @@ export const LandingPage = () => {
         <Container maxW="6xl" px={6} py={{ base: 12, md: 20 }}>
           {/* Hero Section */}
           <MotionStack
-            direction={{ base: 'column', md: 'row' }}
+            direction={{ base: "column", md: "row" }}
             spacing={{ base: 10, md: 16 }}
             align="center"
             justify="space-between"
@@ -242,7 +262,11 @@ export const LandingPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <VStack align="flex-start" spacing={6} maxW={{ base: 'full', md: 'lg' }}>
+            <VStack
+              align="flex-start"
+              spacing={6}
+              maxW={{ base: "full", md: "lg" }}
+            >
               <Badge
                 px={3}
                 py={1}
@@ -251,28 +275,40 @@ export const LandingPage = () => {
                 border="1px solid"
                 borderColor="whiteAlpha.200"
                 fontSize="xs"
+                fontWeight="medium"
                 textTransform="uppercase"
                 letterSpacing="widest"
+                color="whiteAlpha.700" // half-white normal
+                transition="all 0.2s ease" // smooth hover
+                _hover={{
+                  color: "white", // full bright white
+                  boxShadow: "0 0 10px rgba(244,197,66,0.6)", // golden glow
+                  borderColor: "rgba(244,197,66,0.6)",
+                }}
               >
                 HR MANAGEMENT · ATTENDANCE · PAYROLL
               </Badge>
 
               <Heading
                 as="h1"
-                fontSize={{ base: '2.4rem', md: '3.2rem' }}
+                fontSize={{ base: "2.4rem", md: "3.2rem" }}
                 lineHeight="1.1"
               >
-                All-in-one{' '}
-                <Box as="span" bgGradient="linear(to-r, #FFFFFF, #F5C451)" bgClip="text">
+                All-in-one{" "}
+                <Box
+                  as="span"
+                  bgGradient="linear(to-r, #FFFFFF, #F5C451)"
+                  bgClip="text"
+                >
                   HR management
-                </Box>{' '}
+                </Box>{" "}
                 for modern teams.
               </Heading>
 
               <Text fontSize="md" color={mutedText} maxW="lg">
-                Centralise employees, automate attendance, approve leave in one click,
-                and run payroll in hours instead of days — with an interface your team
-                will actually enjoy using.
+                Centralise employees, automate attendance, approve leave in one
+                click, and run payroll in hours instead of days — with an
+                interface your team will actually enjoy using.
               </Text>
 
               <HStack spacing={4} flexWrap="wrap">
@@ -281,9 +317,9 @@ export const LandingPage = () => {
                   bg={accentGold}
                   color="black"
                   rightIcon={<ArrowForwardIcon />}
-                  _hover={{ bg: '#e5b842', transform: 'translateY(-1px)' }}
-                  _active={{ transform: 'translateY(0px)' }}
-                  onClick={() => navigate('/register')}
+                  _hover={{ bg: "#e5b842", transform: "translateY(-1px)" }}
+                  _active={{ transform: "translateY(0px)" }}
+                  onClick={() => navigate("/register")}
                 >
                   Start free trial
                 </Button>
@@ -291,10 +327,11 @@ export const LandingPage = () => {
                   size="lg"
                   variant="outline"
                   borderColor="whiteAlpha.400"
-                  _hover={{ bg: 'whiteAlpha.100' }}
+                  color={"whiteAlpha.700"}
+                  _hover={{ bg: "whiteAlpha.100" }}
                   onClick={() => {
-                    const el = document.getElementById('features');
-                    el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    const el = document.getElementById("features");
+                    el?.scrollIntoView({ behavior: "smooth", block: "start" });
                   }}
                 >
                   View features
@@ -357,6 +394,7 @@ export const LandingPage = () => {
                       px={3}
                       py={1}
                       fontSize="xs"
+                      color={"whiteAlpha.700"}
                     >
                       Live HR Snapshot
                     </Badge>
@@ -365,9 +403,9 @@ export const LandingPage = () => {
                   {/* Stats row */}
                   <SimpleGrid columns={3} spacing={3}>
                     {[
-                      { label: 'Active employees', value: '148' },
-                      { label: 'Present today', value: '132' },
-                      { label: 'Pending leaves', value: '9' },
+                      { label: "Active employees", value: "148" },
+                      { label: "Present today", value: "132" },
+                      { label: "Pending leaves", value: "9" },
                     ].map((item) => (
                       <Box
                         key={item.label}
@@ -389,10 +427,10 @@ export const LandingPage = () => {
 
                   {/* Attendance / Leave strip */}
                   <Stack
-                    direction={{ base: 'column', sm: 'row' }}
+                    direction={{ base: "column", sm: "row" }}
                     spacing={3}
                     pt={2}
-                    align={{ base: 'stretch', sm: 'center' }}
+                    align={{ base: "stretch", sm: "center" }}
                   >
                     <Box
                       flex={1}
@@ -411,9 +449,24 @@ export const LandingPage = () => {
                         </Text>
                       </HStack>
                       <HStack spacing={2}>
-                        <Box flex={1} h={1.5} borderRadius="full" bg="green.400" />
-                        <Box flex={0.5} h={1.5} borderRadius="full" bg="yellow.400" />
-                        <Box flex={0.7} h={1.5} borderRadius="full" bg="red.400" />
+                        <Box
+                          flex={1}
+                          h={1.5}
+                          borderRadius="full"
+                          bg="green.400"
+                        />
+                        <Box
+                          flex={0.5}
+                          h={1.5}
+                          borderRadius="full"
+                          bg="yellow.400"
+                        />
+                        <Box
+                          flex={0.7}
+                          h={1.5}
+                          borderRadius="full"
+                          bg="red.400"
+                        />
                       </HStack>
                     </Box>
                     <Box
@@ -437,69 +490,10 @@ export const LandingPage = () => {
             </MotionBox>
           </MotionStack>
 
-          {/* Feature Section */}
-          <Box id="features" mb={{ base: 16, md: 20 }}>
-            <MotionBox
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.7 }}
-            >
-              <HStack justify="space-between" mb={8} align={{ base: 'flex-start', md: 'center' }}>
-                <VStack align="flex-start" spacing={2}>
-                  <Text fontSize="xs" textTransform="uppercase" color={mutedText}>
-                    Platform capabilities
-                  </Text>
-                  <Heading size={isMobile ? 'md' : 'lg'}>
-                    Everything HR needs, in one place.
-                  </Heading>
-                  <Text fontSize="sm" color={mutedText} maxW="lg">
-                    From employee onboarding to final settlements, HRMS Pro brings every
-                    workflow, approval, and data point into a single, secure platform.
-                  </Text>
-                </VStack>
-              </HStack>
-
-              <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6}>
-                {features.map((feature, idx) => (
-                  <MotionBox
-                    key={feature.title}
-                    borderRadius="xl"
-                    bg={cardBg}
-                    border="1px solid"
-                    borderColor="whiteAlpha.100"
-                    p={5}
-                    boxShadow="0 16px 40px rgba(0,0,0,0.65)"
-                    whileHover={{ translateY: -6, borderColor: borderGold }}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.2 }}
-                    transition={{ duration: 0.5, delay: 0.06 * idx }}
-                  >
-                    <HStack mb={3} spacing={3}>
-                      <Box
-                        borderRadius="lg"
-                        bg="black"
-                        border="1px solid"
-                        borderColor="whiteAlpha.200"
-                        p={2}
-                      >
-                        <Icon as={feature.icon} boxSize={5} color={accentGold} />
-                      </Box>
-                      <Heading size="sm">{feature.title}</Heading>
-                    </HStack>
-                    <Text fontSize="sm" color={mutedText}>
-                      {feature.desc}
-                    </Text>
-                  </MotionBox>
-                ))}
-              </SimpleGrid>
-            </MotionBox>
-          </Box>
-
+          <FeaturesSection />
           {/* Workflow + Stats */}
           <Stack
-            direction={{ base: 'column', md: 'row' }}
+            direction={{ base: "column", md: "row" }}
             spacing={{ base: 10, md: 16 }}
             mb={{ base: 16, md: 20 }}
             align="flex-start"
@@ -512,7 +506,12 @@ export const LandingPage = () => {
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.7 }}
             >
-              <Text fontSize="xs" textTransform="uppercase" color={mutedText} mb={1}>
+              <Text
+                fontSize="xs"
+                textTransform="uppercase"
+                color={mutedText}
+                mb={1}
+              >
                 How it works
               </Text>
               <Heading size="md" mb={5}>
@@ -559,7 +558,12 @@ export const LandingPage = () => {
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.7 }}
             >
-              <Text fontSize="xs" textTransform="uppercase" color={mutedText} mb={1}>
+              <Text
+                fontSize="xs"
+                textTransform="uppercase"
+                color={mutedText}
+                mb={1}
+              >
                 Outcomes
               </Text>
               <Heading size="sm" mb={4}>
@@ -569,7 +573,11 @@ export const LandingPage = () => {
               <SimpleGrid columns={{ base: 1, sm: 3 }} spacing={4} mb={4}>
                 {stats.map((item) => (
                   <Box key={item.label}>
-                    <Text fontSize="lg" fontWeight="semibold" color={accentGold}>
+                    <Text
+                      fontSize="lg"
+                      fontWeight="semibold"
+                      color={accentGold}
+                    >
                       {item.value}
                     </Text>
                     <Text fontSize="xs" color={mutedText}>
@@ -582,11 +590,13 @@ export const LandingPage = () => {
               <Divider borderColor="whiteAlpha.200" my={4} />
 
               <Text fontSize="xs" color={mutedText}>
-                Built for HR, finance, founders, and people managers to collaborate
-                on one source of truth for your workforce.
+                Built for HR, finance, founders, and people managers to
+                collaborate on one source of truth for your workforce.
               </Text>
             </MotionBox>
           </Stack>
+
+          <PricingPage />
 
           {/* Testimonials */}
           <MotionBox
@@ -596,12 +606,18 @@ export const LandingPage = () => {
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.7 }}
           >
-            <HStack justify="space-between" mb={6} align={{ base: 'flex-start', md: 'center' }}>
+            <HStack
+              justify="space-between"
+              mb={6}
+              align={{ base: "flex-start", md: "center" }}
+            >
               <VStack align="flex-start" spacing={1}>
                 <Text fontSize="xs" textTransform="uppercase" color={mutedText}>
                   Teams that trust HRMS Pro
                 </Text>
-                <Heading size="md">HR that people actually love to use.</Heading>
+                <Heading size="md">
+                  HR that people actually love to use.
+                </Heading>
               </VStack>
             </HStack>
 
@@ -639,7 +655,6 @@ export const LandingPage = () => {
               ))}
             </SimpleGrid>
           </MotionBox>
-
           {/* Final CTA */}
           <MotionHStack
             borderRadius="2xl"
@@ -648,19 +663,21 @@ export const LandingPage = () => {
             borderColor={borderGold}
             p={{ base: 6, md: 8 }}
             justify="space-between"
-            align={{ base: 'flex-start', md: 'center' }}
+            align={{ base: "flex-start", md: "center" }}
             spacing={6}
-            direction={{ base: 'column', md: 'row' } as any}
+            direction={{ base: "column", md: "row" } as any}
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.7 }}
           >
             <VStack align="flex-start" spacing={2}>
-              <Heading size="md">Ready to modernize your HR operations?</Heading>
+              <Heading size="md">
+                Ready to modernize your HR operations?
+              </Heading>
               <Text fontSize="sm" color={mutedText}>
-                Create your account in minutes, invite your team, and see how HRMS Pro
-                simplifies attendance, leave, and payroll from day one.
+                Create your account in minutes, invite your team, and see how
+                HRMS Pro simplifies attendance, leave, and payroll from day one.
               </Text>
             </VStack>
             <HStack spacing={3}>
@@ -671,16 +688,16 @@ export const LandingPage = () => {
                 border="1px solid"
                 borderColor={accentGold}
                 rightIcon={<ArrowForwardIcon />}
-                _hover={{ bg: 'whiteAlpha.100' }}
-                onClick={() => navigate('/register')}
+                _hover={{ bg: "whiteAlpha.100" }}
+                onClick={() => navigate("/register")}
               >
                 Register now
               </Button>
               <Button
                 size="md"
                 variant="ghost"
-                _hover={{ bg: 'whiteAlpha.100' }}
-                onClick={() => navigate('/pricing')}
+                _hover={{ bg: "whiteAlpha.100" }}
+                onClick={() => navigate("/pricing")}
               >
                 View pricing
               </Button>
@@ -688,6 +705,6 @@ export const LandingPage = () => {
           </MotionHStack>
         </Container>
       </Box>
-    </Box>
-  );
+    </Box>
+  );
 };
