@@ -4,7 +4,15 @@
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
+-- ===================================================================
+-- ENUM TYPES
+CREATE TYPE subscription_status_enum AS ENUM (
+  'ACTIVE', 'EXPIRED', 'TRIAL', 'CANCELLED','INACTIVE'
+);
 
+CREATE TYPE plan_type_enum AS ENUM (
+  'MONTHLY','YEARLY', 'HALF_YEARLY','QUARTERLY','PER_EMPLOYEE','TRAIL'
+);
 -- ===================================================================
 -- 1. TENANTS
 CREATE TABLE tenants (
@@ -172,9 +180,51 @@ CREATE TABLE audit_logs (
     new_data      JSONB,
     created_at    TIMESTAMP DEFAULT now()
 );
+-- ===================================================================
+-- 10. SUBSCRIPTION PLANS
+-- ===================================================================
+CREATE TABLE subscription_plans (
+    id                   uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    name                 varchar(100) NOT NULL,
+    description          text,
+    price_per_month      numeric(10,2) NOT NULL DEFAULT 0,
+    price_per_employee   numeric(10,2) NOT NULL DEFAULT 0,
+    max_employees        int,
+    features             jsonb,
+    plan_type            plan_type_enum NOT NULL DEFAULT 'MONTHLY',
+    billing_cycle_months int NOT NULL DEFAULT 1,
+    currency             varchar(10) NOT NULL DEFAULT 'INR',
+    -- Trial period support
+    trial_duration_days  int DEFAULT 14,
+
+    created_at   timestamptz NOT NULL DEFAULT now(),
+    updated_at   timestamptz NOT NULL DEFAULT now(),
+    created_by   uuid,
+    updated_by   uuid
+);
 
 -- ===================================================================
--- 10. ENABLE RLS
+-- 11. TENANT SUBSCRIPTIONS
+-- ===================================================================
+CREATE TABLE tenant_subscription (
+    id               uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id        uuid NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+    plan_id          uuid NOT NULL REFERENCES subscription_plans(id),
+
+    status           subscription_status_enum NOT NULL DEFAULT 'ACTIVE',
+    start_date       date NOT NULL DEFAULT current_date,
+    end_date         date,
+    trial_end_date   date,
+    auto_renew       boolean NOT NULL DEFAULT true,
+
+    created_at   timestamptz NOT NULL DEFAULT now(),
+    updated_at   timestamptz NOT NULL DEFAULT now(),
+    created_by   uuid,
+    updated_by   uuid
+);
+CREATE INDEX idx_tenant_subscription_tenant ON tenant_subscription(tenant_id);
+-- ===================================================================
+-- 12. ENABLE RLS
 -- ===================================================================
 
 ALTER TABLE tenants ENABLE ROW LEVEL SECURITY;
@@ -184,9 +234,10 @@ ALTER TABLE departments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE designations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE audit_logs ENABLE ROW LEVEL SECURITY;
-
+ALTER TABLE subscription_plans ENABLE ROW LEVEL SECURITY;
+ALTER TABLE tenant_subscription ENABLE ROW LEVEL SECURITY;
 -- ===================================================================
--- 11. RLS CONTEXT FUNCTIONS
+-- 13. RLS CONTEXT FUNCTIONS
 -- ===================================================================
 
 CREATE OR REPLACE FUNCTION current_tenant()
@@ -200,7 +251,7 @@ RETURNS TEXT LANGUAGE sql AS $$
 $$;
 
 -- ===================================================================
--- 12. RLS POLICIES (FINAL)
+-- 14. RLS POLICIES (FINAL)
 -- ===================================================================
 
 -- TENANTS (super admin only)
@@ -255,3 +306,55 @@ CREATE POLICY audit_logs_rls ON audit_logs
         current_app_role() = 'SUPER_ADMIN'
         OR tenant_id = current_tenant()
     );
+
+-- SUPER ADMIN FULL ACCESS
+CREATE POLICY subscription_plans_super_admin_policy
+ON subscription_plans
+AS PERMISSIVE
+FOR ALL
+TO public
+USING (current_app_role() = 'SUPER_ADMIN')
+WITH CHECK (current_app_role() = 'SUPER_ADMIN');
+
+-- INSERT policy (SUPER_ADMIN only)
+CREATE POLICY subscription_plans_insert_policy
+ON subscription_plans
+AS PERMISSIVE
+FOR INSERT
+TO public
+WITH CHECK (current_app_role() = 'SUPER_ADMIN');
+
+-- READ policy (everyone can read)
+CREATE POLICY subscription_plans_read_policy
+ON subscription_plans
+AS PERMISSIVE
+FOR SELECT
+TO public
+USING (true);
+
+-- SUPER_ADMIN read/write policy
+CREATE POLICY subscription_plans_rw_policy
+ON subscription_plans
+AS PERMISSIVE
+FOR ALL
+TO public
+USING (current_app_role() = 'SUPER_ADMIN')
+WITH CHECK (current_app_role() = 'SUPER_ADMIN');
+
+CREATE POLICY tenant_subscription_super_admin_policy
+ON tenant_subscription
+FOR ALL
+USING (current_app_role() = 'SUPER_ADMIN')
+WITH CHECK (current_app_role() = 'SUPER_ADMIN');
+
+CREATE POLICY tenant_subscription_tenant_policy
+ON tenant_subscription
+FOR ALL
+USING (
+    tenant_id = current_tenant()
+    AND current_app_role() IN ('ADMIN', 'HR')
+)
+WITH CHECK (
+    tenant_id = current_tenant()
+    AND current_app_role() IN ('ADMIN', 'HR')
+);

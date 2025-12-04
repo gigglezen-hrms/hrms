@@ -39,9 +39,9 @@ module.exports = async function verifyJwt(req, res, next) {
 
     // Build req.user for controllers
     req.user = {
-      id: user.id,
-      tenantId: user.tenant_id,
-      employeeId: user.employee_id || null,
+      id: user.user_id || user.userId || user.id,
+      tenantId: user.tenant_id || user.tenantId || user.Id,
+      employeeId: user.employee_id || user.employeeId || null,
       role: user.role,
       mustChangePassword: user.must_change_password
     };

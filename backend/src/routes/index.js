@@ -10,6 +10,7 @@ const tenantRouter = require('../modules/tenant/tenant.router');
 const adminRouter = require('../modules/admin/admin.router');
 const superAdminRouter = require('../modules/super_admin/superAdmin.router');
 const departmentRouter = require('../modules/departments/department.router');
+const subscriptionRouter = require('../modules/subscriptions/subscription.routes');
 
 const router = express.Router();
 
@@ -39,5 +40,8 @@ router.use('/departments', departmentRouter);
 
 // User module (ADMIN, HR)
 router.use('/users', requireRole(['ADMIN', 'HR']), require('./../modules/users/user.router'));
+
+// Subscription module (ADMIN, HR, SUPER_ADMIN)
+router.use('/subscriptions', requireRole(['ADMIN', 'HR', 'SUPER_ADMIN']), subscriptionRouter);
 
 module.exports = router;

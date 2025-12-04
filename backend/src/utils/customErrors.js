@@ -31,10 +31,18 @@ class NotFoundError extends AppError {
     }
 }
 
+class ConflictError extends AppError {
+    constructor(message = 'Conflict') {
+        super(message, 409);
+    }
+}
+
+
 module.exports = {
     AppError,
     BadRequestError,
     UnauthorizedError,
     ForbiddenError,
-    NotFoundError
+    NotFoundError,
+    ConflictError
 };

@@ -1,0 +1,328 @@
+{
+    "info": {
+        "name": "HRMS Subscriptions API",
+        "description": "Subscription management endpoints for HRMS SaaS application",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Plans",
+            "item": [
+                {
+                    "name": "List All Plans",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:5000/api/subscriptions/plans",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "5000",
+                            "path": [
+                                "api",
+                                "subscriptions",
+                                "plans"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Plan",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Custom Plan\",\n  \"description\": \"A custom subscription plan\",\n  \"price_per_month\": 7999,\n  \"price_per_employee\": 750,\n  \"max_employees\": 300,\n  \"plan_type\": \"MONTHLY\",\n  \"billing_cycle_months\": 1,\n  \"currency\": \"INR\",\n  \"trial_duration_days\": null,\n  \"features\": {\n    \"attendance\": true,\n    \"leave_management\": true,\n    \"employee_management\": true,\n    \"basic_reporting\": true,\n    \"advanced_reporting\": true,\n    \"shift_management\": true,\n    \"payroll\": true,\n    \"api_access\": true,\n    \"max_users\": 50,\n    \"support\": \"email_and_phone\",\n    \"custom_workflows\": true,\n    \"multi_location\": true\n  }\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:5000/api/subscriptions/plans",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "5000",
+                            "path": [
+                                "api",
+                                "subscriptions",
+                                "plans"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Plan",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Updated Custom Plan\",\n  \"description\": \"An updated custom subscription plan\",\n  \"price_per_month\": 8999,\n  \"features\": {\n    \"attendance\": true,\n    \"leave_management\": true,\n    \"employee_management\": true,\n    \"basic_reporting\": true,\n    \"advanced_reporting\": true,\n    \"shift_management\": true,\n    \"payroll\": true,\n    \"api_access\": true,\n    \"max_users\": 75,\n    \"support\": \"dedicated_support\",\n    \"custom_workflows\": true,\n    \"multi_location\": true,\n    \"sso\": true\n  }\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:5000/api/subscriptions/plans/{{planId}}",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "5000",
+                            "path": [
+                                "api",
+                                "subscriptions",
+                                "plans",
+                                "{{planId}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Plan",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:5000/api/subscriptions/plans/{{planId}}",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "5000",
+                            "path": [
+                                "api",
+                                "subscriptions",
+                                "plans",
+                                "{{planId}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Subscriptions",
+            "item": [
+                {
+                    "name": "Assign Plan to Tenant",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:5000/api/subscriptions/assign/{{planId}}",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "5000",
+                            "path": [
+                                "api",
+                                "subscriptions",
+                                "assign",
+                                "{{planId}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Current Subscription",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:5000/api/subscriptions/current",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "5000",
+                            "path": [
+                                "api",
+                                "subscriptions",
+                                "current"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Subscription Status",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:5000/api/subscriptions/status",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "5000",
+                            "path": [
+                                "api",
+                                "subscriptions",
+                                "status"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Upgrade Plan",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:5000/api/subscriptions/upgrade/{{newPlanId}}",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "5000",
+                            "path": [
+                                "api",
+                                "subscriptions",
+                                "upgrade",
+                                "{{newPlanId}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Downgrade Plan",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:5000/api/subscriptions/downgrade/{{newPlanId}}",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "5000",
+                            "path": [
+                                "api",
+                                "subscriptions",
+                                "downgrade",
+                                "{{newPlanId}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Cancel Subscription",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{accessToken}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "http://localhost:5000/api/subscriptions/cancel",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "5000",
+                            "path": [
+                                "api",
+                                "subscriptions",
+                                "cancel"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "accessToken",
+            "value": "",
+            "type": "string",
+            "description": "JWT access token from login"
+        },
+        {
+            "key": "planId",
+            "value": "",
+            "type": "string",
+            "description": "Subscription plan UUID"
+        },
+        {
+            "key": "newPlanId",
+            "value": "",
+            "type": "string",
+            "description": "New plan UUID for upgrade/downgrade"
+        }
+    ]
+}
