@@ -13,7 +13,7 @@ class SubscriptionController {
 
     async createPlan(req, res, next) {
         try {
-            const data = await subscriptionService.createPlan(req.db, req.body,{ userId: req.user.userId });
+            const data = await subscriptionService.createPlan(req.db, req.body, req.user.id);
             return success(res, data, 'Plan created successfully', 201);
         } catch (err) {
             next(err);
@@ -24,7 +24,7 @@ class SubscriptionController {
         try {
             const data = await subscriptionService.updatePlan(req.db, req.params.planId, {
                 ...req.body,
-                userId: req.user.userId
+                userId: req.user.id
             });
             return success(res, data, 'Plan updated successfully', 200);
         } catch (err) {
@@ -47,7 +47,7 @@ class SubscriptionController {
             req.db,
             req.params.tenantId,   
             req.params.planId,
-            req.user.userId
+            req.user.id
         );
         
 
@@ -75,7 +75,7 @@ class SubscriptionController {
                 req.db,
                 req.user.tenantId,
                 req.params.planId,
-                req.user.userId
+                req.user.id
             );
             return success(res, data, 'Plan upgraded successfully', 200);
         } catch (err) {
@@ -89,7 +89,7 @@ class SubscriptionController {
                 req.db,
                 req.user.tenantId,
                 req.params.planId,
-                req.user.userId
+                req.user.id
             );
             return success(res, data, 'Plan downgraded successfully', 200);
         } catch (err) {
@@ -102,7 +102,7 @@ class SubscriptionController {
             const data = await subscriptionService.cancelSubscription(
                 req.db,
                 req.user.tenantId,
-                req.user.userId
+                req.user.id
             );
             return success(res, data, 'Subscription cancelled successfully', 200);
         } catch (err) {
@@ -113,7 +113,6 @@ class SubscriptionController {
     async getSubscriptionStatus(req, res, next) {
         try {
             const data = await subscriptionService.getSubscriptionStatus(req.db, req.user.tenantId);
-            console.log("TENANT ID:", req.user.tenantId);
             return success(res, data);
         } catch (err) {
             next(err);

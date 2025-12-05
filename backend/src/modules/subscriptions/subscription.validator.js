@@ -1,9 +1,7 @@
 const { z } = require('zod');
 
 const listPlansSchema = z.object({
-    body: z.object({}),
-    query: z.object({}),
-    params: z.object({})
+    query: z.object({})
 });
 
 const createPlanSchema = z.object({
@@ -33,7 +31,6 @@ const updatePlanSchema = z.object({
         plan_type: z.enum(['MONTHLY', 'YEARLY', 'HALF_YEARLY', 'QUARTERLY', 'PER_EMPLOYEE', 'TRAIL']).optional(),
         billing_cycle_months: z.number().int().min(1, 'Billing cycle must be at least 1 month').optional(),
         currency: z.string().length(3).optional(),
-        trial_duration_days: z.number().int().positive().optional()
     }),
     query: z.object({}),
     params: z.object({
@@ -42,7 +39,6 @@ const updatePlanSchema = z.object({
 });
 
 const deletePlanSchema = z.object({
-    body: z.object({}),
     query: z.object({}),
     params: z.object({
         planId: z.string().uuid()
@@ -59,13 +55,10 @@ const assignPlanSchema = z.object({
 });
 
 const currentSubscriptionSchema = z.object({
-    body: z.object({}),
-    query: z.object({}),
-    params: z.object({})
+    query: z.object({})
 });
 
 const upgradePlanSchema = z.object({
-    body: z.object({}),
     query: z.object({}),
     params: z.object({
         planId: z.string().uuid()
@@ -73,7 +66,6 @@ const upgradePlanSchema = z.object({
 });
 
 const downgradePlanSchema = z.object({
-    body: z.object({}),
     query: z.object({}),
     params: z.object({
         planId: z.string().uuid()
