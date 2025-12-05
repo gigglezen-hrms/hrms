@@ -73,10 +73,6 @@ exports.login = async (req, res) => {
   }
 };
 
-
-// ========================================================================
-// REFRESH TOKEN
-// ========================================================================
 exports.refreshToken = async (req, res) => {
   try {
     const { refresh_token } = req.body;
@@ -88,8 +84,10 @@ exports.refreshToken = async (req, res) => {
 
     // Fetch user
     const userRes = await pool.query(
-      `SELECT id, email, tenant_id, role, employee_id
-       FROM users WHERE id = $1`,
+      `SELECT u.id, u.email, u.tenant_id, u.role, e.id AS employee_id
+       FROM users u
+       LEFT JOIN employees e ON e.user_id = u.id
+       WHERE u.id = $1`,
       [session.user_id]
     );
 

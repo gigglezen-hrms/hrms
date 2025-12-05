@@ -108,3 +108,48 @@ exports.activateUser = async (req, res) => {
     res.status(400).json({ status: "error", message: err.message });
   }
 };
+
+exports.updateUserStatus = async (req, res) => {
+  try {
+    const result = await userService.updateUserStatus(req.db, req.params.id, req.body.is_active, req.user);
+    res.json({ status: "success", result });
+  } catch (err) {
+    res.status(400).json({ status: "error", message: err.message });
+  }
+};
+
+exports.getMyProfile = async (req, res) => {
+  try {
+    const profile = await userService.getMyProfile(req.db, req.user);
+    res.json({ status: "success", profile });
+  } catch (err) {
+    res.status(400).json({ status: "error", message: err.message });
+  }
+};
+
+exports.updateMyProfile = async (req, res) => {
+  try {
+    const updated = await userService.updateMyProfile(req.db, req.user, req.body);
+    res.json({ status: "success", updated });
+  } catch (err) {
+    res.status(400).json({ status: "error", message: err.message });
+  }
+};
+
+exports.getManagerDashboard = async (req, res) => {
+  try {
+    const dashboard = await userService.getManagerDashboard(req.db, req.user);
+    res.json({ status: "success", dashboard });
+  } catch (err) {
+    res.status(400).json({ status: "error", message: err.message });
+  }
+};
+
+exports.getDirectReports = async (req, res) => {
+  try {
+    const reports = await userService.getDirectReports(req.db, req.user);
+    res.json({ status: "success", reports });
+  } catch (err) {
+    res.status(400).json({ status: "error", message: err.message });
+  }
+};

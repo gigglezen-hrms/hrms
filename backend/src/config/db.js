@@ -1,76 +1,62 @@
-// src/config/db.js
-const { Pool } = require('pg');
-const env = require('./env');
-const logger = require('./logger');
-
-const asyncContext = require('../utils/asyncContext');
+const { Pool } = require("pg");
+const env = require("./env");
+const logger = require("./logger");
+const asyncContext = require("../utils/asyncContext");
 
 const pool = new Pool({
-    connectionString: env.DATABASE_URL,
-    max: 20,
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 10000,
-    ssl: env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+  connectionString: env.DATABASE_URL,
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 10000,
+  ssl: env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false
 });
 
-pool.on('error', (err) => {
-    logger.error('Unexpected PG pool error', { err });
+pool.on("error", (err) => {
+  logger.error("Unexpected PG pool error", { err });
 });
 
-// Wrapper to set session variables
-const originalConnect = pool.connect.bind(pool);
-const originalQuery = pool.query.bind(pool);
+// --------- RLS SESSION WRAPPER ---------
+async function withContext(client) {
+  const store = asyncContext.getStore();
+  if (!store) return;
 
-pool.connect = async (...args) => {
-    const client = await originalConnect(...args);
-    const store = asyncContext.getStore();
+  const tenantId = store.get("tenantId");
+  const userId = store.get("userId");
+  const employeeId = store.get("employeeId");
+  const role = store.get("role");
 
-    if (store) {
-        try {
-            const tenantId = store.get('tenantId');
-            const userId = store.get('userId');
-            const employeeId = store.get('employeeId');
-            const role = store.get('role');
+  // SUPER ADMIN bypasses tenant isolation
+  if (role === "SUPER_ADMIN") {
+    await client.query(`SET app.role = 'SUPER_ADMIN'`);
+    await client.query(`SET app.tenant_id = NULL`);
+  } else {
+    await client.query(`SET app.role = $1`, [role]);
+    await client.query(`SET app.tenant_id = $2`, [tenantId]);
+  }
 
-            const setters = [];
-            const values = [];
+  await client.query(`SET app.user_id = $1`, [userId || null]);
+  await client.query(`SET app.employee_id = $2`, [employeeId || null]);
+}
 
-            if (tenantId) {
-                setters.push(`set_config('app.tenant_id', $${values.length + 1}, false)`);
-                values.push(tenantId);
-            }
-            if (userId) {
-                setters.push(`set_config('app.user_id', $${values.length + 1}, false)`);
-                values.push(userId);
-            }
-            if (employeeId) {
-                setters.push(`set_config('app.employee_id', $${values.length + 1}, false)`);
-                values.push(employeeId);
-            }
-            if (role) {
-                setters.push(`set_config('app.role', $${values.length + 1}, false)`);
-                values.push(role);
-            }
-
-            if (setters.length > 0) {
-                await client.query(`SELECT ${setters.join(', ')}`, values);
-            }
-        } catch (err) {
-            logger.error('Error setting DB session variables', { err });
-            // Don't release here, let the caller handle it or fail
-        }
-    }
-
-    return client;
+// --------- OVERRIDE pool.query ---------
+pool.query = async (text, params) => {
+  const client = await pool.connect();
+  try {
+    await withContext(client);
+    return await client.query(text, params);
+  } finally {
+    await client.query("RESET ALL");
+    client.release();
+  }
 };
 
-pool.query = async (text, params) => {
-    const client = await pool.connect();
-    try {
-        return await client.query(text, params);
-    } finally {
-        client.release();
-    }
+// --------- OVERRIDE pool.connect ---------
+const originalConnect = pool.connect.bind(pool);
+
+pool.connect = async (...args) => {
+  const client = await originalConnect(...args);
+  await withContext(client);
+  return client;
 };
 
 module.exports = pool;
