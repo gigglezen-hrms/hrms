@@ -30,12 +30,12 @@ async function withContext(client) {
     await client.query(`SET app.role = 'SUPER_ADMIN'`);
     await client.query(`SET app.tenant_id = NULL`);
   } else {
-    await client.query(`SET app.role = $1`, [role]);
-    await client.query(`SET app.tenant_id = $2`, [tenantId]);
+    await client.query(`SET app.role = '${role}'`);
+    await client.query(`SET app.tenant_id = '${tenantId}'`);
   }
 
-  await client.query(`SET app.user_id = $1`, [userId || null]);
-  await client.query(`SET app.employee_id = $2`, [employeeId || null]);
+  await client.query(`SET app.user_id = '${userId || null}'`);
+  await client.query(`SET app.employee_id = '${employeeId || null}'`);
 }
 
 // --------- OVERRIDE pool.query ---------
